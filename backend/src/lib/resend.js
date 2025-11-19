@@ -1,8 +1,7 @@
 import { Resend } from 'resend';
-import "dotenv/config";
+import { ENV } from './env.js';
 
-
-const { RESEND_API_KEY, EMAIL_FROM, EMAIL_FROM_NAME } = process.env;
+const { RESEND_API_KEY, EMAIL_FROM, EMAIL_FROM_NAME } = ENV;
 
 if (!RESEND_API_KEY || !EMAIL_FROM || !EMAIL_FROM_NAME) {
   throw new Error('Missing required environment variables: RESEND_API_KEY, EMAIL_FROM, EMAIL_FROM_NAME');
