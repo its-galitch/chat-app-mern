@@ -40,7 +40,7 @@ export const signup = async (req, res)=> {
         });
 
         if(newUser) {
-            const savedUser = newUser.save();
+            const savedUser = await newUser.save();
             generateToken(newUser._id, res);
 
 
@@ -53,8 +53,7 @@ export const signup = async (req, res)=> {
             // todo: send a welcome email to user
             try {
                 console.log("Sending Welcome email...");
-                const { email, fullName } = await savedUser; 
-                await sendWelcomeEmail(email, fullName, process.env.CLIENT_URL);
+                await sendWelcomeEmail(savedUser.email, savedUser.fullName, process.env.CLIENT_URL);
             } catch (error) {
                 console.error(error);                
             }
