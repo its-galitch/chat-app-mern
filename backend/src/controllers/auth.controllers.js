@@ -58,9 +58,10 @@ export const signup = async (req, res)=> {
                 console.error(error);                
             }
 
-        } else {
-            errorResponseMessage("Invalid user data", 400);
+        } catch (error) {
+            console.error(error);                
         }
+    }
 
         
     } catch (error) {
