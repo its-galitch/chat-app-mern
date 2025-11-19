@@ -1,35 +1,35 @@
 import User from "../models/User.js";
 import { generateToken } from "../lib/utils.js";
 import bcrypt from 'bcryptjs';
-import 'dotenv/config';
-import { sendWelcomeEmail } from "../../emails/emailHandlers.js";
+import { sendWelcomeEmail } from "../emails/emailHandlers.js";
+import { ENV } from "../lib/env.js";
 
 
 
 
-export const signup = async (req, res)=> {
-    function errorResponseMessage(message, status=400) {
-        res.status(status).json({message});
+export const signup = async (req, res) => {
+    function errorResponseMessage(message, status = 400) {
+        res.status(status).json({ message });
     }
 
-    const {fullName, email, password} = req.body;
+    const { fullName, email, password } = req.body;
 
     try {
-        if(!fullName || !email || !password) {
+        if (!fullName || !email || !password) {
             return errorResponseMessage('All fields are required!');
         }
 
-        if(password.length < 6) {
+        if (password.length < 6) {
             return errorResponseMessage('Password must be at least 6 characters');
         }
 
         const emailRegEx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if(!emailRegEx.test(email)) {
+        if (!emailRegEx.test(email)) {
             return errorResponseMessage('Invalid email format');
         }
 
-        const user = await User.findOne({email});
-        if(user) return errorResponseMessage('Email already exists!');
+        const user = await User.findOne({ email });
+        if (user) return errorResponseMessage('Email already exists!');
 
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
@@ -39,7 +39,7 @@ export const signup = async (req, res)=> {
             password: hashedPassword
         });
 
-        if(newUser) {
+        if (newUser) {
             const savedUser = await newUser.save();
             generateToken(newUser._id, res);
 
@@ -53,17 +53,12 @@ export const signup = async (req, res)=> {
             // todo: send a welcome email to user
             try {
                 console.log("Sending Welcome email...");
-                await sendWelcomeEmail(savedUser.email, savedUser.fullName, process.env.CLIENT_URL);
+                await sendWelcomeEmail(savedUser.email, savedUser.fullName, ENV.CLIENT_URL);
             } catch (error) {
-                console.error(error);                
+                console.error(error);
             }
-
-        } catch (error) {
-            console.error(error);                
         }
-    }
 
-        
     } catch (error) {
         console.log("Error in signup controller:", error);
         errorResponseMessage("Something went wrong!", 500);
@@ -71,11 +66,11 @@ export const signup = async (req, res)=> {
 }
 
 
-(req, res)=> {
+export const login = (req, res) => {
     res.send('Login endpoint')
 }
 
 
-(req, res)=> {
+export const logout = (req, res) => {
     res.send('Logout endpoint')
 }
