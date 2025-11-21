@@ -1,8 +1,9 @@
 import User from "../models/User.js";
-import { generateToken } from "../lib/utils.js";
+import { generateToken, createCatchLog } from "../lib/utils.js";
 import bcrypt from 'bcryptjs';
 import { sendWelcomeEmail } from "../emails/emailHandlers.js";
 import { ENV } from "../lib/env.js";
+
 
 
 
@@ -60,8 +61,11 @@ export const signup = async (req, res) => {
         }
 
     } catch (error) {
-        console.log("Error in signup controller:", error);
-        errorResponseMessage("Something went wrong!", 500);
+        createCatchLog(
+            res, 
+            error, 
+            "signup controller", 
+            "Something went wrong!");
     }
 }
 
@@ -83,8 +87,11 @@ export const login = async (req, res) => {
             profilePic: user.profilePic
         });
     } catch (error) {
-        console.error("Error in login controller", error);
-        res.status(500).json({message: "Internal server error"});
+        createCatchLog(
+            res, 
+            error, 
+            "login controller", 
+            "Something went wrong!");
     }
 }
 
