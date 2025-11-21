@@ -32,6 +32,10 @@ export const updateProfile = async (req, res) => {
             { new: true }
         );
 
+        if (!updatedUser) {
+            return res.status(404).json({message: "User not found"});
+        }
+
         res.status(200).json(updatedUser);
     } catch (error) {
         createCatchLog(res, error, "updateProfile");
