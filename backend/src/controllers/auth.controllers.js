@@ -9,6 +9,11 @@ import { ENV } from "../lib/env.js";
 
 
 export const signup = async (req, res) => {
+    /**
+     * Send a JSON error response with the provided message and HTTP status.
+     * @param {string} message - Error message to include in the response body.
+     * @param {number} [status=400] - HTTP status code to send.
+     */
     function errorResponseMessage(message, status = 400) {
         res.status(status).json({ message });
     }
